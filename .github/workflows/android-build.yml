@@ -19,11 +19,8 @@ jobs:
     
     - name: Setup Android SDK
       run: |
-        # Create our own SDK directory
         mkdir -p $HOME/android-sdk/cmdline-tools
         cd $HOME/android-sdk/cmdline-tools
-        
-        # Download command line tools
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
         unzip -q cmdline-tools.zip
         rm cmdline-tools.zip
@@ -31,13 +28,11 @@ jobs:
     
     - name: Install SDK components
       run: |
-        export HOME=/home/runner
         export ANDROID_HOME=$HOME/android-sdk
         export ANDROID_SDK_ROOT=$HOME/android-sdk
         export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-        
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
-        sdkmanager "platforms;android-33" "build-tools;33.0.2"
+        sdkmanager "platforms;android-33" "build-tools;30.0.3"
     
     - name: Set environment
       run: |
