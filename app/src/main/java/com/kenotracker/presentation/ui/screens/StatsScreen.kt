@@ -14,7 +14,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kenotracker.presentation.ui.components.StatCard
-import com.kenotracker.presentation.ui.theme.KenoBackground
 import com.kenotracker.presentation.ui.theme.KenoPrimary
 import com.kenotracker.presentation.ui.theme.KenoSecondary
 import com.kenotracker.presentation.ui.theme.KenoSelected

@@ -1,4 +1,3 @@
-@OptIn(ExperimentalLayoutApi::class)
 package com.kenotracker.presentation.ui.components
 
 import androidx.compose.foundation.background
@@ -29,14 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kenotracker.domain.model.NumberRecommendation
-import com.kenotracker.presentation.ui.theme.ColdColor
-import com.kenotracker.presentation.ui.theme.HotColor
 import com.kenotracker.presentation.ui.theme.KenoBackground
-import com.kenotracker.presentation.ui.theme.KenoSelected
 import com.kenotracker.presentation.ui.theme.KenoText
 import com.kenotracker.presentation.ui.theme.KenoTextSecondary
-import com.kenotracker.presentation.ui.theme.TrendColor
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecommendationCard(
     title: String,
@@ -77,7 +73,6 @@ fun RecommendationCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-
                 if (numbers.isNotEmpty()) {
                     val confidence = (numbers.firstOrNull()?.confidence ?: 0f) * 100
                     Text(
@@ -87,7 +82,6 @@ fun RecommendationCard(
                     )
                 }
             }
-
             if (numbers.isNotEmpty()) {
                 FlowRow(
                     modifier = Modifier
@@ -104,7 +98,6 @@ fun RecommendationCard(
                         )
                     }
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -115,11 +108,8 @@ fun RecommendationCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = KenoTextSecondary
                     )
-
                     IconButton(
-                        onClick = {
-                            onNumbersSelected(numbers.map { it.number }.toSet())
-                        }
+                        onClick = { onNumbersSelected(numbers.map { it.number }.toSet()) }
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
