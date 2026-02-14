@@ -1,9 +1,7 @@
-name: Build APK
+name: Android Build
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -12,78 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
     
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
+    - uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: Fix SDK paths
-      run: |
-        # Unset the default ANDROID_SDK_ROOT to avoid conflicts
-        echo "ANDROID_SDK_ROOT=" >> \$GITHUB_ENV
-        echo "ANDROID_HOME=\$HOME/android-sdk" >>
-cat > .github/workflows/build.yml << 'ENDOFFILE'
-name: Build APK
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    
-    - name: Fix SDK paths
-      run: |
-        # Unset the default ANDROID_SDK_ROOT to avoid conflicts
-        echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
-        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-    
-    - name: Download Android command line tools
-      run: |
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        cd $HOME/android-sdk/cmdline-tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-        unzip -q cmdline-tools.zip
-        rm cmdline-tools.zip
-        mv cmdline-tools latest
-    
-    - name: Install SDK components
-      run: |
-        export ANDROID_HOME=$HOME/android-sdk
-        export ANDROID_SDK_ROOT=
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-        yes | sdkmanager --licenses 2>/dev/null || true
-        sdkmanager "platforms;android-33" "build-tools;33.0.2"
-    
-    - name: Build APK
-      run: |
-        export ANDROID_HOME=$HOME/android-sdk
-        export ANDROID_SDK_ROOT=
-        export JAVA_HOME=$JAVA_HOME
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-        chmod +x ./gradlew
-        ./gradlew assembleDebug --no-daemon
+    - name: Build
+      run: ./gradlew assembleDebug
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: keno-tracker-debug
+        name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
