@@ -32,7 +32,7 @@ jobs:
         export ANDROID_SDK_ROOT=$HOME/android-sdk
         export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
-        sdkmanager "platforms;android-33" "build-tools;30.0.3"
+        sdkmanager "platforms;android-33" "build-tools;30.0.2"
     
     - name: Set environment
       run: |
