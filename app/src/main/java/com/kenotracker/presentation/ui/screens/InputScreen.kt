@@ -72,7 +72,7 @@ fun InputScreen(
                     onNumberClick = { viewModel.toggleNumber(it) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
+                        .fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
