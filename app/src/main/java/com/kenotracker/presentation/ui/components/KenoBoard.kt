@@ -6,8 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,133 +28,34 @@ import com.kenotracker.presentation.ui.theme.KenoSelected
 import com.kenotracker.presentation.ui.theme.KenoText
 import com.kenotracker.presentation.ui.theme.KenoTextSecondary
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun KenoBoard(
     selectedNumbers: Set<Int>,
     onNumberClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Group numbers into 4 quadrants (2x2 grid)
-    // Q1: 1-20 (top-left), Q2: 21-40 (top-right)
-    // Q3: 41-60 (bottom-left), Q4: 61-80 (bottom-right)
-    
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(4.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // Top row - Quadrants 1 (1-20) and 2 (21-40)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            // Quadrant 1: 1-20
-            QuadrantBox(
-                title = "1-20",
-                numbers = (1..20).toList(),
-                selectedNumbers = selectedNumbers,
-                onNumberClick = onNumberClick,
-                modifier = Modifier.weight(1f)
-            )
-            
-            // Quadrant 2: 21-40
-            QuadrantBox(
-                title = "21-40",
-                numbers = (21..40).toList(),
-                selectedNumbers = selectedNumbers,
-                onNumberClick = onNumberClick,
-                modifier = Modifier.weight(1f)
-            )
-        }
+        // 10 columns, 8 rows = 80 numbers
+        // Each row has 10 numbers
         
-        // Bottom row - Quadrants 3 (41-60) and 4 (61-80)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            // Quadrant 3: 41-60
-            QuadrantBox(
-                title = "41-60",
-                numbers = (41..60).toList(),
-                selectedNumbers = selectedNumbers,
-                onNumberClick = onNumberClick,
-                modifier = Modifier.weight(1f)
-            )
-            
-            // Quadrant 4: 61-80
-            QuadrantBox(
-                title = "61-80",
-                numbers = (61..80).toList(),
-                selectedNumbers = selectedNumbers,
-                onNumberClick = onNumberClick,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun QuadrantBox(
-    title: String,
-    numbers: List<Int>,
-    selectedNumbers: Set<Int>,
-    onNumberClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(8.dp))
-            .background(KenoTextSecondary.copy(alpha = 0.1f))
-            .padding(4.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        // Quadrant title
-        Text(
-            text = title,
-            color = KenoPrimary,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        
-        // Numbers in 2 columns
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            // Column 1 - first half
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+        (0..7).forEach { row ->
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                numbers.take(10).forEach { num ->
+                (1..10).forEach { col ->
+                    val number = row * 10 + col
                     NumberCell(
-                        number = num,
-                        isSelected = num in selectedNumbers,
-                        onClick = { onNumberClick(num) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
-            
-            // Column 2 - second half
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                numbers.drop(10).forEach { num ->
-                    NumberCell(
-                        number = num,
-                        isSelected = num in selectedNumbers,
-                        onClick = { onNumberClick(num) },
+                        number = number,
+                        isSelected = number in selectedNumbers,
+                        onClick = { onNumberClick(number) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -172,20 +73,21 @@ private fun NumberCell(
 ) {
     val backgroundColor = if (isSelected) KenoSelected else Color.Transparent
     val textColor = if (isSelected) Color.Black else KenoText
-    val borderColor = if (isSelected) KenoSelected else KenoTextSecondary.copy(alpha = 0.5f)
+    val borderColor = if (isSelected) KenoSelected else KenoTextSecondary
     
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(6.dp))
             .background(backgroundColor)
-            .border(1.dp, borderColor, RoundedCornerShape(4.dp))
+            .border(2.dp, borderColor, RoundedCornerShape(6.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = String.format("00", number),
             color = textColor,
-            fontSize = 14.sp,
+            fontSize = 20.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             textAlign = TextAlign.Center
         )
