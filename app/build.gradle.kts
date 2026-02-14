@@ -58,7 +58,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.5.1")
 
-    // Use explicit versions instead of BOM
     implementation("androidx.compose.ui:ui:1.2.1")
     implementation("androidx.compose.ui:ui-graphics:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
@@ -68,9 +67,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
 
-    implementation("androidx.room:room-runtime:2.4.3")
-    implementation("androidx.room:room-ktx:2.4.3")
-    ksp("androidx.room:room-compiler:2.4.3")
+    // Use Room 2.4.2 which is more compatible with KSP 1.6.21
+    implementation("androidx.room:room-runtime:2.4.2")
+    implementation("androidx.room:room-ktx:2.4.2")
+    ksp("androidx.room:room-compiler:2.4.2")
 
     implementation("com.google.dagger:hilt-android:2.44")
     ksp("com.google.dagger:hilt-android-compiler:2.44")
