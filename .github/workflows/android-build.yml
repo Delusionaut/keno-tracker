@@ -18,10 +18,31 @@ jobs:
         distribution: 'temurin'
     
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+      run: |
+        # Use our own SDK
+        export ANDROID_HOME=$HOME/android-sdk
+        export ANDROID_SDK_ROOT=$HOME/android-sdk
+        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+        
+        # Create SDK directory
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        cd $ANDROID_HOME/cmdline-tools
+        
+        # Download and extract command line tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+        unzip -q cmdline-tools.zip
+        rm cmdline-tools.zip
+        mv cmdline-tools latest
+        
+        # Install SDK components
+        yes | sdkmanager --licenses > /dev/null 2>&1 || true
+        sdkmanager "platforms;android-33" "build-tools;33.0.2"
     
-    - name: Build
-      run: ./gradlew assembleDebug
+    - name: Set ANDROID_HOME
+      run: echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+    
+    - name: Build APK
+      run: ./gradlew assembleDebug --no-daemon
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
