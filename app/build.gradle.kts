@@ -43,7 +43,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = "1.3.0"
     }
 
     packagingOptions {
@@ -67,7 +67,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
 
-    // Use Room 2.4.2 which is more compatible with KSP 1.6.21
     implementation("androidx.room:room-runtime:2.4.2")
     implementation("androidx.room:room-ktx:2.4.2")
     ksp("androidx.room:room-compiler:2.4.2")
