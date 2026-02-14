@@ -19,27 +19,30 @@ jobs:
     
     - name: Setup Android SDK
       run: |
-        # Use our own SDK
-        export ANDROID_HOME=$HOME/android-sdk
-        export ANDROID_SDK_ROOT=$HOME/android-sdk
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+        # Create our own SDK directory
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
         
-        # Create SDK directory
-        mkdir -p $ANDROID_HOME/cmdline-tools
-        cd $ANDROID_HOME/cmdline-tools
-        
-        # Download and extract command line tools
+        # Download command line tools
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
         unzip -q cmdline-tools.zip
         rm cmdline-tools.zip
         mv cmdline-tools latest
+    
+    - name: Install SDK components
+      run: |
+        export HOME=/home/runner
+        export ANDROID_HOME=$HOME/android-sdk
+        export ANDROID_SDK_ROOT=$HOME/android-sdk
+        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
         
-        # Install SDK components
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
         sdkmanager "platforms;android-33" "build-tools;33.0.2"
     
-    - name: Set ANDROID_HOME
-      run: echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+    - name: Set environment
+      run: |
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
     
     - name: Build APK
       run: ./gradlew assembleDebug --no-daemon
