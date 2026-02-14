@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,12 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kenotracker.presentation.ui.theme.KenoPrimary
 import com.kenotracker.presentation.ui.theme.KenoSelected
 import com.kenotracker.presentation.ui.theme.KenoText
 import com.kenotracker.presentation.ui.theme.KenoTextSecondary
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun KenoBoard(
     selectedNumbers: Set<Int>,
@@ -42,14 +37,13 @@ fun KenoBoard(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // 8 rows of 10 numbers each
-        (0..7).forEach { row ->
-            FlowRow(
+        // 8 rows, each with 10 numbers
+        for (row in 0 until 8) {
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                (1..10).forEach { col ->
+                for (col in 1..10) {
                     val number = row * 10 + col
                     NumberCell(
                         number = number,
@@ -76,17 +70,18 @@ private fun NumberCell(
     
     Box(
         modifier = modifier
-            .aspectRatio(1f)
+            .padding(2.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(backgroundColor)
             .border(2.dp, borderColor, RoundedCornerShape(6.dp))
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = String.format("00", number),
+            text = number.toString(),
             color = textColor,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             textAlign = TextAlign.Center
         )
